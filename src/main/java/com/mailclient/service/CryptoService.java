@@ -55,7 +55,7 @@ public class CryptoService {
     @SneakyThrows
     public static Pair<String, List<DataSource>> decrypt(String content, List<DataSource> attachments, String fromEmail) {
         MailSession currentMailSession = AccountService.getCurrentMailSession();
-        File file = new File("src/main/java/com/mailclient/files/" + currentMailSession.getEmail() + "/" + fromEmail);
+        File file = new File("src/main/java/com/mailclient/files/" + fromEmail + "/" + currentMailSession.getEmail());
         FileInputStream in = new FileInputStream(file);
         byte[] privateRsaKeyBytes = new byte[in.available()];
         in.read(privateRsaKeyBytes);
