@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.SneakyThrows;
 
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;

@@ -1,9 +1,8 @@
 package com.mailclient.controller;
 
-import com.mailclient.crypt.RSACrypt;
-import com.mailclient.entity.MailSession;
+import com.mailclient.crypto.RSACrypt;
 import com.mailclient.service.AccountService;
-import com.mailclient.service.CryptService;
+import com.mailclient.service.CryptoService;
 import com.mailclient.service.MailService;
 import com.mailclient.service.SignService;
 import javafx.event.EventHandler;
@@ -41,7 +40,7 @@ public class MailWritingFormController implements Initializable {
     @FXML private ImageView addAttachmentButton;
     @FXML private ListView listView;
     @FXML private FlowPane attachmentPane;
-    @FXML private CheckBox cryptCheckBox;
+    @FXML private CheckBox isNeedCryptoCheckBox;
     @FXML private CheckBox signCheckBox;
 
     private final AnchorPane mainPane;
@@ -98,10 +97,10 @@ public class MailWritingFormController implements Initializable {
                 handleOnAddAttachmentButtonClick();
             }
         });
-        cryptCheckBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        isNeedCryptoCheckBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                handleOnCryptCheckBoxClick();
+                handleOnIsNeedCryptoCheckBoxClick();
             }
         });
     }
@@ -124,12 +123,10 @@ public class MailWritingFormController implements Initializable {
             if(signCheckBox.isSelected()) {
                 SignService.createSign(htmlContent, attachments);
             }
-            if(cryptCheckBox.isSelected()) {
-                String rsaPubKeyString = "";
-                if(!RSACrypt.isPublicRsaKey(rsaPubKeyString)) {
-                    throw new MessagingException("Неверный RSA ключ");
-                }
-                Pair<String, List<DataSource>> pair = CryptService.encrypt(htmlContent, attachments, rsaPubKeyString);
+            if(isNeedCryptoCheckBox.isSelected()) {
+                String publicRsaKey = RSACrypt.generateRsaPublicKey(AccountService.getCurrentMailSession().getEmail(), toEmail);
+                Pair<String, List<DataSource>> pair = CryptoService.encrypt(htmlContent, attachments, publicRsaKey);
+                System.out.println(AccountService.getCurrentMailSession().getEmail() + "mail was encrypt by RSA algorithm, publicKey: " + publicRsaKey);
                 mailService.sendEmail(toEmail, subject, pair.getKey(), pair.getValue());
             } else {
                 mailService.sendEmail(toEmail, subject, htmlContent, attachments);
@@ -162,7 +159,7 @@ public class MailWritingFormController implements Initializable {
         attachmentPane.getChildren().add(loader.load());
     }
 
-    public void handleOnCryptCheckBoxClick() {
-        boolean value = cryptCheckBox.isSelected();
+    public void handleOnIsNeedCryptoCheckBoxClick() {
+        boolean value = isNeedCryptoCheckBox.isSelected();
     }
 }

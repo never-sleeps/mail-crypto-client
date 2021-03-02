@@ -6,7 +6,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import lombok.SneakyThrows;
@@ -15,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 import javax.activation.DataSource;
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class AttachmentReadingCellController implements Initializable {

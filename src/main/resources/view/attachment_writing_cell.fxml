@@ -5,7 +5,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
 <AnchorPane prefHeight="30.0" prefWidth="235.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="filenameLabel" layoutX="24.0" layoutY="6.0" prefHeight="17.0" prefWidth="211.0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mi odio, pretium non commodo nec, facilisis sit amet arcu. Nulla interdum sapien a ex dapibus rutrum non ac dui. Sed sed vulputate ante. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis nunc nec tincidunt ultricies. Nam lobortis lobortis quam, nec tincidunt leo blandit porttitor. Duis magna arcu, hendrerit id dui at, rutrum venenatis dolor.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mi odio, pretium non commodo nec, facilisis sit amet arcu. Nulla interdum sapien a ex dapibus rutrum non ac dui. Sed sed vulputate ante. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis nunc nec tincidunt ultricies. Nam lobortis lobortis quam, nec tincidunt leo blandit porttitor. Duis magna arcu, hendrerit id dui at, rutrum venenatis dolor.">
