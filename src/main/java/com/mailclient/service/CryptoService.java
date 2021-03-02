@@ -31,7 +31,7 @@ public class CryptoService {
         DESCrypt desCrypt = new DESCrypt(secretKey);
         String encryptedContent = desCrypt.encrypt(base64content);
 
-        for(DataSource attachment : CryptoUtils.getAttachmentsWithoutServiceFile(attachments)) {
+        for(DataSource attachment : attachments) {
             String attachmentContent = new BufferedReader(
                      new InputStreamReader(attachment.getInputStream()))
                     .lines()
@@ -63,6 +63,8 @@ public class CryptoService {
 
         // находим среди вложений файл с ключом шифрования
         Optional<DataSource> publicKeyDataSource = CryptoUtils.getFileFromAttachments("publickey", attachments);
+        publicKeyDataSource.ifPresent(attachments::remove);
+
         InputStream inputStream = publicKeyDataSource.get().getInputStream();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         byte[] buffer = new byte[inputStream.available()];
@@ -76,7 +78,7 @@ public class CryptoService {
         String decryptedContent = new String(Base64.getDecoder().decode(desCrypt.decrypt(content)));
 
         List<DataSource> decryptedAttachments = new ArrayList<>();
-        for(DataSource attachment : CryptoUtils.getAttachmentsWithoutServiceFile(attachments)) {
+        for(DataSource attachment : attachments) {
             String attCont = new BufferedReader(
                     new InputStreamReader(attachment.getInputStream()))
                     .lines()

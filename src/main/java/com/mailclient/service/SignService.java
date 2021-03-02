@@ -25,8 +25,6 @@ public class SignService {
      */
     @SneakyThrows
     public static void createSign(String htmlContent, List<DataSource> attachments) {
-        // удаляем служебные файлы из вложений
-        attachments = CryptoUtils.getAttachmentsWithoutServiceFile(attachments);
         // Генерируем открытый и закрытый ключи, алгоритм = DSA, keySize = 1024
         KeyPair keyPair = CryptoUtils.generateKeyPair("DSA", 1024);
         // Создание цифровой подписи
@@ -61,7 +59,7 @@ public class SignService {
         // находим среди вложений файл с открытым ключом подписи
         Optional<DataSource> signDataSource = CryptoUtils.getFileFromAttachments("sign", attachments);
         // удаляем служебные файлы из вложений
-        attachments = CryptoUtils.getAttachmentsWithoutServiceFile(attachments);
+        signDataSource.ifPresent(attachments::remove);
 
         InputStream is = signDataSource.get().getInputStream();
         byte[] pubKey = new byte[592];

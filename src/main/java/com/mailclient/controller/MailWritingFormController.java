@@ -97,12 +97,6 @@ public class MailWritingFormController implements Initializable {
                 handleOnAddAttachmentButtonClick();
             }
         });
-        isNeedCryptoCheckBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                handleOnIsNeedCryptoCheckBoxClick();
-            }
-        });
     }
 
     public void handleOnBackButtonClick() {
@@ -157,9 +151,5 @@ public class MailWritingFormController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/attachment_writing_cell.fxml"));
         loader.setController(attachmentWritingCellController);
         attachmentPane.getChildren().add(loader.load());
-    }
-
-    public void handleOnIsNeedCryptoCheckBoxClick() {
-        boolean value = isNeedCryptoCheckBox.isSelected();
     }
 }
