@@ -4,7 +4,6 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
 <AnchorPane prefHeight="739.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mailclient.controller.MainFormController">
    <children>
       <AnchorPane prefWidth="190.0">

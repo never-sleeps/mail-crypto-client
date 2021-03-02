@@ -2,8 +2,8 @@ package com.mailclient.controller;
 
 import com.mailclient.component.AccountsListViewCell;
 import com.mailclient.component.FolderListViewCell;
-import com.mailclient.entity.MailSession;
 import com.mailclient.entity.AccountFolder;
+import com.mailclient.entity.MailSession;
 import com.mailclient.service.AccountService;
 import com.mailclient.service.MailService;
 import javafx.collections.FXCollections;
@@ -29,8 +29,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.*;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 @Slf4j
 @Component

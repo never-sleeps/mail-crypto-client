@@ -1,7 +1,7 @@
 package com.mailclient.controller;
 
 import com.mailclient.entity.Mail;
-import com.mailclient.service.CryptService;
+import com.mailclient.service.CryptoService;
 import com.mailclient.service.SignService;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -32,7 +32,8 @@ public class MailReadingFormController implements Initializable {
     @FXML private Label fromEmailLabel;
     @FXML private Label sentDateLabel;
     @FXML private Label subjectLabel;
-    @FXML private Label errorLabel;
+    @FXML private Label messageLabel;
+    @FXML private Label isDecryptedLabel;
     @FXML private WebView contentWebView;
     @FXML private FlowPane attachmentsPane;
     @FXML private ImageView backButton;
@@ -40,7 +41,8 @@ public class MailReadingFormController implements Initializable {
     private final Mail mail;
     private final AnchorPane mainPane;
     private boolean isSigned;
-    private boolean sign;
+    private boolean isVerifiedSign;
+    private boolean isDecrypted;
 
     public MailReadingFormController(Mail mail, AnchorPane mainPane) {
         this.mail = mail;
@@ -48,19 +50,32 @@ public class MailReadingFormController implements Initializable {
         this.isSigned = false;
         for(DataSource attachment : mail.getAttachments()) {
             if (attachment.getName() != null) {
-                if(attachment.getName().equals("encdeskey")) {
-                    Pair<String, List<DataSource>> pair = CryptService.decrypt(mail.getContent(), mail.getAttachments(), this.mail.getFromEmail());
-                    this.mail.setContent(pair.getKey());
-                    this.mail.setAttachments(pair.getValue());
+                if(attachment.getName().equals("publickey")) {
+                    try {
+                        Pair<String, List<DataSource>> pair = CryptoService.decrypt(mail.getContent(), mail.getAttachments(), this.mail.getFromEmail());
+                        this.mail.setContent(pair.getKey());
+                        this.mail.setAttachments(pair.getValue());
+                        isDecrypted = true;
+                        System.out.println("Mail was decrypted");
+                    } catch (Exception e) {
+                        System.err.println("Mail decryption ERROR!");
+                        e.printStackTrace();
+                    }
                     break;
                 }
             }
         }
         for(DataSource attachment : mail.getAttachments()) {
             if (attachment.getName() != null) {
-                if (attachment.getName().equals("pubandsign")) {
-                    this.isSigned = true;
-                    this.sign = SignService.checkSign(mail.getContent(), mail.getAttachments());
+                if (attachment.getName().equals("sign")) {
+                    try {
+                        this.isSigned = true;
+                        this.isVerifiedSign = SignService.verifySign(mail.getContent(), mail.getAttachments());
+                        System.out.println("Verification of a signed object: " + ((isVerifiedSign) ? "success" : "failure"));
+                    } catch (Exception e) {
+                        System.err.println("Verification of a signed object ERROR!");
+                        e.printStackTrace();
+                    }
                     break;
                 }
             }
@@ -83,14 +98,13 @@ public class MailReadingFormController implements Initializable {
         fromEmailLabel.setText(mail.getFromEmail());
         contentWebView.getEngine().loadContent(mail.getContent());
         if(isSigned) {
-            if(sign) {
-                errorLabel.setText("Письмо подписано ЭЦП. ЭЦП валидна.");
+            if(isVerifiedSign) {
+                messageLabel.setText("Письмо подписано ЭЦП. ЭЦП валидна.");
+            } else {
+                messageLabel.setText("Письмо подписано ЭЦП. ЭЦП не валидна.");
             }
-            else {
-                errorLabel.setText("Письмо подписано ЭЦП. ЭЦП не валидна.");
-            }
-
         }
+        if (isDecrypted) isDecryptedLabel.setText("RSA шифрование");
         for(DataSource dataSource : mail.getAttachments()) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/attachment_reading_cell.fxml"));
             AttachmentReadingCellController attachmentReadingCellController = new AttachmentReadingCellController(dataSource);
